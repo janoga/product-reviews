@@ -1,0 +1,9 @@
+CHANGED_FILES="$(git diff-tree -r --name-only --no-commit-id HEAD@{1} HEAD 2>/dev/null)"
+
+if echo "$CHANGED_FILES" | grep -q -E "pnpm-lock\.yaml|package\.json"; then
+  echo "🔄 Syncing dependencies after checkout..."
+  pnpm install --frozen-lockfile
+  echo "✅ Dependencies synced!"
+else
+  echo "ℹ️  No dependency changes detected"
+fi

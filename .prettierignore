@@ -1,0 +1,21 @@
+# Build outputs
+.next
+dist
+.turbo
+
+# Dependencies
+node_modules
+pnpm-lock.yaml
+
+# Generated files
+.prisma
+
+# Logs
+*.log
+
+# Coverage
+coverage
+.vitest
+
+# OS
+.DS_Store

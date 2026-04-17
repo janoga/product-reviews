@@ -1,0 +1,22 @@
+# Allowed commit types
+COMMIT_TYPES="feat|fix|refactor|docs|style|test|chore|perf|ci|revert"
+
+# Validates: <type>: <description> (NO scope, max 72 chars)
+commit_regex="^($COMMIT_TYPES): .{1,72}$"
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Format: <type>: <description> (max 72 chars, no scope)"
+    echo ""
+    echo "Types: ${COMMIT_TYPES//|/, }"
+    echo ""
+    echo "Examples:"
+    echo "  feat: add campaign list view"
+    echo "  fix: handle AI JSON parse errors"
+    echo "  docs: update README with setup instructions"
+    echo ""
+    exit 1
+fi
+
+echo "✅ Commit message format is valid"
