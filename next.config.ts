@@ -16,6 +16,17 @@ const nextConfig: NextConfig = {
 
   // Security: remove X-Powered-By header
   poweredByHeader: false,
+
+  // Allow next/image to load images from MinIO
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '/product-images/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
