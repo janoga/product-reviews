@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "db:seed": "dotenv -e .env.local -- tsx prisma/seed.ts",
     "db:studio": "dotenv -e .env.local -- prisma studio",
     "db:reset": "dotenv -e .env.local -- prisma migrate reset --force",
     "db:generate": "dotenv -e .env.local -- prisma generate"
