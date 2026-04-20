@@ -6,6 +6,7 @@ import { PackageSearch } from 'lucide-react';
 
 import { EmptyState, ErrorState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
+import { useInfiniteScroll } from '@/lib/hooks/use-infinite-scroll';
 import { cn } from '@/lib/utils';
 
 import { fetchProductsPageAction } from './actions';
@@ -24,8 +25,6 @@ interface ProductGridProps {
     categorySlug?: string;
   };
 }
-
-const INFINITE_TRIGGER_ROOT_MARGIN = '400px';
 
 /**
  * Infinite-scrolling product list. The first page is SSR-rendered and hydrated
@@ -54,27 +53,16 @@ export function ProductGrid({ initialPage, filters }: ProductGridProps) {
 
   const items = React.useMemo(() => query.data.pages.flatMap((page) => page.items), [query.data]);
 
-  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const { hasNextPage, isFetchingNextPage, fetchNextPage } = query;
+  const onLoadMore = React.useCallback(() => {
+    void fetchNextPage();
+  }, [fetchNextPage]);
 
-  React.useEffect(() => {
-    const node = sentinelRef.current;
-    if (!node || !hasNextPage) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting && !isFetchingNextPage) {
-          void fetchNextPage();
-        }
-      },
-      { rootMargin: INFINITE_TRIGGER_ROOT_MARGIN },
-    );
-
-    observer.observe(node);
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const sentinelRef = useInfiniteScroll({
+    hasMore: hasNextPage,
+    isFetching: isFetchingNextPage,
+    onLoadMore,
+  });
 
   if (query.isError) {
     return (

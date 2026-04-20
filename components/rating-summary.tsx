@@ -1,4 +1,5 @@
 import { StarRating, type StarRatingSize } from '@/components/star-rating';
+import { formatCount } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 interface RatingSummaryProps {
@@ -32,7 +33,7 @@ export function RatingSummary({
       {showAverage ? (
         <span className="font-medium tabular-nums">{averageRating.toFixed(1)}</span>
       ) : null}
-      <span className="text-muted-foreground text-xs">({reviewCount.toLocaleString('en-US')})</span>
+      <span className="text-muted-foreground text-xs">({formatCount(reviewCount)})</span>
     </div>
   );
 }

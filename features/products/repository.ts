@@ -1,3 +1,4 @@
+import type { RatingCounts } from '@/components/rating-distribution';
 import type { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/db';
 import { resolveProductImageUrl } from '@/lib/images';
@@ -76,6 +77,76 @@ export async function listProductsPage(params: ListProductsInput): Promise<Produ
   });
 
   return { items, nextCursor };
+}
+
+/** Data shape for the product detail page — richer than a catalog card. */
+export interface ProductDetailData {
+  /** DB id — used as the stable filter for the reviews infinite list. */
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string | null;
+  category: { slug: string; name: string };
+  averageRating: number;
+  reviewCount: number;
+  /** Per-star counts (1–5), suitable for `RatingDistribution`. */
+  ratingCounts: RatingCounts;
+}
+
+/**
+ * Loads all data needed to render the detail hero: the product + a single
+ * `groupBy` across its reviews. We derive the average and per-bucket counts
+ * from the grouped rows so we don't make an extra aggregate query.
+ *
+ * Returns `null` when the slug is unknown; the route turns that into a 404.
+ */
+export async function findProductDetail(slug: string): Promise<ProductDetailData | null> {
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      slug: true,
+      name: true,
+      description: true,
+      price: true,
+      imageKey: true,
+      category: { select: { slug: true, name: true } },
+    },
+  });
+
+  if (!product) return null;
+
+  const buckets = await prisma.review.groupBy({
+    by: ['rating'],
+    where: { productId: product.id },
+    _count: { _all: true },
+  });
+
+  const ratingCounts: RatingCounts = {};
+  let reviewCount = 0;
+  let ratingSum = 0;
+  for (const { rating, _count } of buckets) {
+    if (rating >= 1 && rating <= 5) {
+      ratingCounts[rating as 1 | 2 | 3 | 4 | 5] = _count._all;
+    }
+    reviewCount += _count._all;
+    ratingSum += rating * _count._all;
+  }
+
+  return {
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    description: product.description,
+    price: product.price.toNumber(),
+    imageUrl: resolveProductImageUrl(product.imageKey),
+    category: { slug: product.category.slug, name: product.category.name },
+    averageRating: reviewCount === 0 ? 0 : ratingSum / reviewCount,
+    reviewCount,
+    ratingCounts,
+  };
 }
 
 /** Groups reviews by product ID and returns average + count for each. */

@@ -63,7 +63,7 @@ function StarRatingDisplay({ value, size = 'md', className, label }: StarRatingD
     <div
       role="img"
       aria-label={ariaLabel}
-      className={cn('relative inline-flex shrink-0 items-center gap-0.5', className)}
+      className={cn('relative inline-flex w-fit shrink-0 items-center gap-0.5', className)}
     >
       <div className="flex items-center gap-0.5" aria-hidden>
         {STAR_INDICES.map((i) => (

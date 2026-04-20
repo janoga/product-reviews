@@ -1,9 +1,6 @@
 'use client';
 
-import * as React from 'react';
-
-import { ErrorState } from '@/components/empty-state';
-import { Button } from '@/components/ui/button';
+import { RouteErrorBoundary } from '@/components/route-error-boundary';
 
 interface CatalogErrorProps {
   error: Error & { digest?: string };
@@ -11,23 +8,12 @@ interface CatalogErrorProps {
 }
 
 /** Route-level error boundary for the catalog. */
-export default function CatalogError({ error, reset }: CatalogErrorProps) {
-  React.useEffect(() => {
-    console.error('[catalog] page error', error);
-  }, [error]);
-
+export default function CatalogError(props: CatalogErrorProps) {
   return (
-    <div className="mx-auto flex w-full max-w-7xl px-4 py-16">
-      <ErrorState
-        className="w-full"
-        title="Something went wrong"
-        description="We couldn't load the product catalog. Please try again."
-        action={
-          <Button variant="outline" size="sm" onClick={reset}>
-            Try again
-          </Button>
-        }
-      />
-    </div>
+    <RouteErrorBoundary
+      {...props}
+      scope="catalog"
+      description="We couldn't load the product catalog. Please try again."
+    />
   );
 }

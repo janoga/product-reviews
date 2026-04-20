@@ -5,6 +5,7 @@ import { ImageOff } from 'lucide-react';
 import { RatingSummary } from '@/components/rating-summary';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
+import { formatPrice } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 /** Minimal product shape a catalog card needs. Derived in the repository. */
@@ -133,13 +134,4 @@ function ProductBody({
       </p>
     </div>
   );
-}
-
-/** Formats an amount as a localized currency string. */
-function formatPrice(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0,
-  }).format(amount);
 }
