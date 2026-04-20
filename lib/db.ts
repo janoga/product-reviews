@@ -1,8 +1,3 @@
-/**
- * Prisma Client singleton
- * Ensures single instance in development with hot reloading
- */
-
 import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from '../generated/prisma/client';
@@ -10,7 +5,10 @@ import { env } from './env';
 
 const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
 
-// Singleton pattern prevents multiple instances during Next.js hot reloading
+/**
+ * Prisma Client singleton — reused across hot reloads in development to avoid
+ * exhausting the connection pool.
+ */
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };

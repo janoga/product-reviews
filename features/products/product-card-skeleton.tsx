@@ -9,10 +9,7 @@ interface ProductCardSkeletonProps {
   className?: string;
 }
 
-/**
- * Matches the layout of `ProductCard` so skeletons slot into the catalog grid
- * or list without any layout shift.
- */
+/** Layout-matched skeleton for `ProductCard` — prevents layout shift on load. */
 export function ProductCardSkeleton({ variant = 'grid', className }: ProductCardSkeletonProps) {
   return (
     <Card

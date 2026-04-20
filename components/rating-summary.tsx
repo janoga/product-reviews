@@ -12,8 +12,8 @@ interface RatingSummaryProps {
 }
 
 /**
- * Compact rating summary — stars plus review count, with an optional numeric
- * average. Used on product cards and (with `showAverage`) the detail hero.
+ * Stars + review count, with an optional numeric average.
+ * Used on product cards and (with `showAverage`) the detail hero.
  */
 export function RatingSummary({
   averageRating,

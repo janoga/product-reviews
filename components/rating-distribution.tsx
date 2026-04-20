@@ -14,10 +14,7 @@ interface RatingDistributionProps {
   className?: string;
 }
 
-/**
- * Five horizontal bars (5★ → 1★) visualising the rating distribution for a
- * product. Percentages are computed server-side from review counts.
- */
+/** Five horizontal bars (5★ → 1★) visualising a product's rating distribution. */
 export function RatingDistribution({ counts, className }: RatingDistributionProps) {
   const total = Object.values(counts).reduce<number>((sum, n) => sum + n, 0);
 

@@ -1,9 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductCardSkeleton } from '@/features/products/product-card-skeleton';
 
-/**
- * Streamed while the catalog page's RSC data resolves
- */
+/** Streamed while the catalog page's RSC data resolves. */
 export default function CatalogLoading() {
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:py-10" aria-busy>

@@ -8,8 +8,8 @@ export interface CategoryStats {
 }
 
 /**
- * Single round-trip that returns every category alongside its product count
- * plus the total. Powers the catalog sidebar and "All products" aggregate.
+ * Returns every category with its product count plus the overall total.
+ * Powers the catalog sidebar and the "All products" aggregate.
  */
 export async function listCategoryStats(): Promise<CategoryStats> {
   const [rows, totalProductCount] = await Promise.all([
@@ -33,15 +33,19 @@ export async function listCategoryStats(): Promise<CategoryStats> {
   return { categories, totalProductCount };
 }
 
+export interface CategorySummary {
+  slug: string;
+  name: string;
+}
+
 /**
- * Returns the internal ID for a category slug, or `null` if the slug is unknown
- * (in which case callers should treat the filter as "no results" rather than
- * 500-ing).
+ * Lightweight lookup used by the dynamic category route to validate the slug
+ * and generate SEO metadata. Returns `null` when the slug is unknown.
  */
-export async function findCategoryIdBySlug(slug: string): Promise<string | null> {
+export async function findCategoryBySlug(slug: string): Promise<CategorySummary | null> {
   const row = await prisma.category.findUnique({
     where: { slug },
-    select: { id: true },
+    select: { slug: true, name: true },
   });
-  return row?.id ?? null;
+  return row;
 }

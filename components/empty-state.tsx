@@ -14,9 +14,8 @@ interface EmptyStateProps {
 }
 
 /**
- * Neutral empty-state primitive — use whenever a list or search returns no
- * results. For failures, prefer `ErrorState` so screen readers get the
- * appropriate `role="alert"` semantics.
+ * Neutral empty-state primitive for lists/searches with no results. Use
+ * `ErrorState` instead when representing a failure.
  */
 export function EmptyState({
   icon: Icon = Inbox,
@@ -37,10 +36,7 @@ interface ErrorStateProps extends Omit<EmptyStateProps, 'icon'> {
   icon?: LucideIcon;
 }
 
-/**
- * Error-state primitive — `role="alert"` so assistive tech announces it.
- * Pair with a retry action via the `action` prop.
- */
+/** Error-state primitive with `role="alert"`. Pair with a retry via `action`. */
 export function ErrorState({
   icon: Icon = CircleAlert,
   title,

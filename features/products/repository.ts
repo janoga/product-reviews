@@ -20,15 +20,13 @@ export interface ProductsPage {
 }
 
 /**
- * Fetches one catalog page matching the filters with cursor pagination and
- * server-computed rating aggregates.
- *
- * Two queries per page regardless of page size:
- *   1. The products themselves (with their category) ordered by `createdAt desc, id desc`.
+ * Fetches one catalog page with cursor pagination and server-computed rating
+ * aggregates. Two queries per page:
+ *   1. Products (with category) ordered by `createdAt desc, id desc`.
  *   2. A single `groupBy` that averages + counts reviews for the returned IDs.
  *
- * Cursor strategy: the cursor is the `id` of the last item of the previous
- * page. We fetch `pageSize + 1` to detect `hasMore` without a second query.
+ * The cursor is the last row's `id`; we fetch `pageSize + 1` to detect
+ * `hasMore` without an extra round-trip.
  */
 export async function listProductsPage(params: ListProductsInput): Promise<ProductsPage> {
   const { q, categorySlug, cursor, pageSize = PRODUCTS_PAGE_SIZE } = params;
@@ -80,10 +78,7 @@ export async function listProductsPage(params: ListProductsInput): Promise<Produ
   return { items, nextCursor };
 }
 
-/**
- * Groups reviews by product ID and returns average + count. Returning an empty
- * map when there are no product IDs keeps callers branch-free.
- */
+/** Groups reviews by product ID and returns average + count for each. */
 async function aggregateRatings(
   productIds: string[],
 ): Promise<Map<string, { average: number; count: number }>> {

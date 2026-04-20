@@ -15,9 +15,8 @@ interface ProductSearchProps {
 }
 
 /**
- * URL-authoritative search input. Local state gives snappy typing; a debounced
- * `router.replace` keeps the URL in sync so the RSC page can re-render with
- * the new filter (and the result is shareable / back-button friendly).
+ * URL-authoritative search input. Local state for snappy typing; debounced
+ * `router.replace` keeps the URL in sync so results stay shareable.
  */
 export function ProductSearch({ className }: ProductSearchProps) {
   const router = useRouter();
@@ -29,9 +28,8 @@ export function ProductSearch({ className }: ProductSearchProps) {
   const [lastUrlQuery, setLastUrlQuery] = React.useState(urlQuery);
   const [, startTransition] = React.useTransition();
 
-  // Sync local state when the URL changes externally (e.g. back button,
-  // category click). Derived-state-during-render is the React-recommended
-  // alternative to updating state from an effect.
+  // Sync local state when the URL changes externally (back button, category
+  // click). Derived state during render is preferred over an effect here.
   if (urlQuery !== lastUrlQuery) {
     setLastUrlQuery(urlQuery);
     setValue(urlQuery);

@@ -3,10 +3,7 @@ import { z } from 'zod';
 /** Maximum products per catalog page. Tuned for a 4-column grid + ~3 rows. */
 export const PRODUCTS_PAGE_SIZE = 12;
 
-/**
- * Canonical search/filter parameters for the catalog. Used by the URL parser,
- * the Server Action re-validator, and the repository.
- */
+/** Canonical catalog search/filter params — shared by the Server Action and repository. */
 export const listProductsParamsSchema = z.object({
   q: z.string().trim().max(120).optional(),
   categorySlug: z

@@ -5,10 +5,6 @@ import { Star } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-/**
- * Visual sizes for the star icons. Kept in one place so display and input
- * variants stay pixel-identical.
- */
 const STAR_SIZE = {
   sm: 'size-3.5',
   md: 'size-4',
@@ -46,13 +42,9 @@ interface StarRatingInputProps {
 export type StarRatingProps = StarRatingDisplayProps | StarRatingInputProps;
 
 /**
- * Reusable, accessible star rating — a single component for display and input.
- *
- * - `mode="display"` renders a non-interactive row with an `aria-label` that
- *   conveys the numeric rating. Partial fills are supported for averages.
- * - `mode="input"` renders a `radiogroup` of five native radio inputs wrapped
- *   in labels, so screen readers and keyboard users get browser-native
- *   behavior with no custom key handling required.
+ * Accessible star rating used in two modes:
+ *   - `display`: non-interactive row with partial fills for averages.
+ *   - `input`: native radio group so keyboard + screen-reader work for free.
  */
 export function StarRating(props: StarRatingProps) {
   return props.mode === 'display' ? (

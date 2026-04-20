@@ -6,10 +6,7 @@ interface CategorySidebarProps {
   totalCount?: number;
 }
 
-/**
- * Desktop-only wrapper around `CategoryList`. Hidden below `md` — mobile uses
- * `CategorySheet`. Keeps page layout decisions out of `CategoryList` (SRP).
- */
+/** Desktop sticky sidebar wrapping `CategoryList`. Hidden below `md` (mobile uses `CategorySheet`). */
 export function CategorySidebar({ items, activeSlug, totalCount }: CategorySidebarProps) {
   return (
     <aside className="hidden md:block">

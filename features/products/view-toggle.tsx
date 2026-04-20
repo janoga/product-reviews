@@ -1,53 +1,23 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LayoutGrid, List } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-import type { ProductCardVariant } from './product-card';
-import { parseView, VIEW_STORAGE_KEY } from './view';
+import { useCatalogView } from './catalog-view-context';
 
 interface ViewToggleProps {
-  current: ProductCardVariant;
   className?: string;
 }
 
 /**
- * URL is authoritative so the server renders the right layout immediately.
- * `localStorage` mirrors the last explicit choice so a fresh visit restores
- * the user's preference (PRD §4.1) without making the URL mandatory.
+ * Flips the catalog between grid and list. Thin UI on top of the cookie-backed
+ * catalog view context — no URL changes, no flicker.
  */
-export function ViewToggle({ current, className }: ViewToggleProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (searchParams.has('view')) return;
-    const stored = window.localStorage.getItem(VIEW_STORAGE_KEY);
-    const storedView = parseView(stored);
-    if (stored && storedView !== current) {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('view', storedView);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    }
-  }, [current, pathname, router, searchParams]);
-
-  const setView = React.useCallback(
-    (view: ProductCardVariant) => {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(VIEW_STORAGE_KEY, view);
-      }
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('view', view);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-    },
-    [pathname, router, searchParams],
-  );
+export function ViewToggle({ className }: ViewToggleProps) {
+  const { view, setView } = useCatalogView();
 
   return (
     <div
@@ -58,7 +28,7 @@ export function ViewToggle({ current, className }: ViewToggleProps) {
       <ToggleButton
         label="Grid view"
         icon={<LayoutGrid />}
-        isActive={current === 'grid'}
+        isActive={view === 'grid'}
         onClick={() => {
           setView('grid');
         }}
@@ -66,7 +36,7 @@ export function ViewToggle({ current, className }: ViewToggleProps) {
       <ToggleButton
         label="List view"
         icon={<List />}
-        isActive={current === 'list'}
+        isActive={view === 'list'}
         onClick={() => {
           setView('list');
         }}

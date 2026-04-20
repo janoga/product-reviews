@@ -15,10 +15,8 @@ interface CategorySheetProps {
 }
 
 /**
- * Mobile-only wrapper around `CategoryList`. A `Sheet` drawer triggered from a
- * "Categories" button — reuses the same `CategoryList` as the desktop sidebar
- * (DRY). The sheet auto-closes when an item is picked so navigation feels
- * instant on touch devices.
+ * Mobile category drawer wrapping `CategoryList`. Auto-closes on selection so
+ * navigation feels instant on touch devices.
  */
 export function CategorySheet({ items, activeSlug, totalCount }: CategorySheetProps) {
   const [open, setOpen] = React.useState(false);

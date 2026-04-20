@@ -33,16 +33,15 @@ interface ProductCardProps {
 }
 
 /**
- * Unified product card — a single component with a `variant` prop, so the
- * catalog's grid and list modes stay visually consistent and share all
- * non-layout logic (DRY).
+ * Unified product card for both grid and list catalog layouts. A single
+ * component with a `variant` prop keeps the two modes visually consistent.
  */
 export function ProductCard({ product, variant = 'grid', className }: ProductCardProps) {
   return (
     <Card
       className={cn(
-        'group/product-card transition-shadow hover:shadow-md',
-        variant === 'list' && 'flex-row overflow-hidden md:gap-0',
+        'group/product-card gap-0 py-0 transition-shadow hover:shadow-md',
+        variant === 'list' && 'flex-row',
         className,
       )}
     >
@@ -72,7 +71,7 @@ function ProductImage({
 }) {
   const wrapperClasses = cn(
     'relative shrink-0 overflow-hidden bg-muted',
-    variant === 'grid' ? 'aspect-4/3 w-full' : 'aspect-square w-28 self-stretch sm:w-36 md:w-44',
+    variant === 'grid' ? 'aspect-4/3 w-full' : 'aspect-square w-36 self-stretch sm:w-48 md:w-54',
   );
 
   if (!imageUrl) {
@@ -136,10 +135,7 @@ function ProductBody({
   );
 }
 
-/**
- * Formats an integer amount as a localized currency string. Colocated here
- * until a second caller appears — then lift to a shared module (YAGNI).
- */
+/** Formats an amount as a localized currency string. */
 function formatPrice(amount: number): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',

@@ -1,8 +1,8 @@
 import { env } from '@/lib/env';
 
 /**
- * Builds a public image URL from a storage object key stored in the database.
- * Returns `null` for missing keys so callers can render a placeholder.
+ * Builds a public image URL from a storage object key. Returns `null` for
+ * missing keys so callers can render a placeholder.
  */
 export function resolveProductImageUrl(key: string | null | undefined): string | null {
   if (!key) return null;

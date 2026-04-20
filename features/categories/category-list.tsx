@@ -25,9 +25,8 @@ interface CategoryListProps {
 }
 
 /**
- * Accessible list of category navigation links with active state and product
- * counts. Pure presentational component — callers provide the data and URL
- * state; this is the single source of truth for category navigation markup.
+ * Accessible list of category navigation links with active state and counts.
+ * Presentational only — callers pass the data and the active slug.
  */
 export function CategoryList({
   items,
@@ -48,7 +47,7 @@ export function CategoryList({
       {items.map((item) => (
         <CategoryListItemLink
           key={item.slug}
-          href={`/?category=${item.slug}`}
+          href={`/${item.slug}`}
           label={item.name}
           count={item.productCount}
           isActive={item.slug === activeSlug}

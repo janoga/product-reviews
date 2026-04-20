@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 import { fetchProductsPageAction } from './actions';
+import { useCatalogView } from './catalog-view-context';
 import { ProductCard, type ProductCardVariant } from './product-card';
 import { ProductCardSkeleton } from './product-card-skeleton';
 import type { ProductsPage } from './repository';
@@ -22,20 +23,18 @@ interface ProductGridProps {
     q?: string;
     categorySlug?: string;
   };
-  variant: ProductCardVariant;
 }
 
 const INFINITE_TRIGGER_ROOT_MARGIN = '400px';
 
 /**
- * Infinite-scrolling product list. The first page arrives pre-rendered from
- * the Server Component, so users see results immediately and TanStack Query
- * only fetches subsequent pages via a Server Action.
- *
- * Remounting via a React `key` on the parent (the page) is the simplest way
- * to reset the infinite cache whenever filters change.
+ * Infinite-scrolling product list. The first page is SSR-rendered and hydrated
+ * as initial data; subsequent pages are fetched via a Server Action.
+ * Parents remount this component (via `key`) to reset the cache on filter changes.
  */
-export function ProductGrid({ initialPage, filters, variant }: ProductGridProps) {
+export function ProductGrid({ initialPage, filters }: ProductGridProps) {
+  const { view: variant } = useCatalogView();
+
   const query = useInfiniteQuery({
     queryKey: ['products', filters.q ?? '', filters.categorySlug ?? ''],
     initialPageParam: null as string | null,

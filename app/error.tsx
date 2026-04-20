@@ -10,6 +10,7 @@ interface CatalogErrorProps {
   reset: () => void;
 }
 
+/** Route-level error boundary for the catalog. */
 export default function CatalogError({ error, reset }: CatalogErrorProps) {
   React.useEffect(() => {
     console.error('[catalog] page error', error);
