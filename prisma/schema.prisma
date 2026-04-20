@@ -27,7 +27,7 @@ model Product {
   slug        String   @unique
   description String   @db.Text
   price       Decimal  @db.Decimal(10, 2)
-  imageUrl    String?  @map("image_url")
+  imageKey    String?  @map("image_key")
   categoryId  String   @map("category_id")
   createdAt   DateTime @default(now()) @map("created_at")
 

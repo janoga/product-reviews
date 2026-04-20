@@ -39,7 +39,7 @@ async function seedProducts(categoryIdBySlug: Map<string, string>): Promise<stri
       name: product.name,
       description: product.description,
       price: product.price,
-      imageUrl: product.imageFileName,
+      imageKey: product.imageFileName,
       categoryId,
     };
 

@@ -1,6 +1,8 @@
-import '@/lib/env';
-
 import type { NextConfig } from 'next';
+
+import { env } from '@/lib/env';
+
+const storageUrl = new URL(env.NEXT_PUBLIC_STORAGE_URL);
 
 const nextConfig: NextConfig = {
   // Standalone output for Docker deployment
@@ -19,11 +21,13 @@ const nextConfig: NextConfig = {
 
   // Allow next/image to load images from MinIO
   images: {
+    dangerouslyAllowLocalIP: env.NODE_ENV !== 'production',
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        pathname: '/product-images/**',
+        protocol: storageUrl.protocol.replace(':', '') as 'http' | 'https',
+        hostname: storageUrl.hostname,
+        port: storageUrl.port,
+        pathname: `${storageUrl.pathname.replace(/\/$/, '')}/**`,
       },
     ],
   },

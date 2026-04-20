@@ -6,14 +6,9 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from '../generated/prisma/client';
+import { env } from './env';
 
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error('DATABASE_URL environment variable is not set');
-}
-
-const adapter = new PrismaPg({ connectionString });
+const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
 
 // Singleton pattern prevents multiple instances during Next.js hot reloading
 const globalForPrisma = globalThis as unknown as {
@@ -24,9 +19,9 @@ export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
 
-if (process.env.NODE_ENV !== 'production') {
+if (env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
