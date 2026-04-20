@@ -56,7 +56,17 @@ async function seedProducts(categoryIdBySlug: Map<string, string>): Promise<stri
 }
 
 async function seedReviews(productIds: string[]): Promise<void> {
-  for (const productId of productIds) {
+  const productsWithoutReviews = 10;
+  const skipIndices = new Set<number>();
+
+  while (skipIndices.size < productsWithoutReviews && skipIndices.size < productIds.length) {
+    skipIndices.add(Math.floor(Math.random() * productIds.length));
+  }
+
+  for (let i = 0; i < productIds.length; i++) {
+    if (skipIndices.has(i)) continue;
+
+    const productId = productIds[i];
     const existing = await prisma.review.count({ where: { productId } });
     if (existing > 0) continue;
 
