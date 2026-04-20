@@ -5,6 +5,7 @@
 
 import { prisma } from '../lib/db';
 import { categories } from './seed-data/categories';
+import { seedImages } from './seed-data/images';
 import { products } from './seed-data/products';
 import { generateReviews, getRandomReviewDate } from './seed-data/reviews';
 
@@ -80,6 +81,10 @@ async function main(): Promise<void> {
   const productIds = await seedProducts(categoryIdBySlug);
   await seedReviews(productIds);
 
+  const imageSummary = await seedImages(
+    products.map((product) => ({ key: product.imageFileName, slug: product.slug })),
+  );
+
   const [categoryCount, productCount, reviewCount] = await Promise.all([
     prisma.category.count(),
     prisma.product.count(),
@@ -89,6 +94,7 @@ async function main(): Promise<void> {
   console.warn(`✅ Categories: ${categoryCount}`);
   console.warn(`✅ Products:   ${productCount}`);
   console.warn(`✅ Reviews:    ${reviewCount}`);
+  console.warn(`✅ Images:     ${imageSummary.uploaded + imageSummary.skipped}`);
 }
 
 main()
