@@ -25,11 +25,9 @@ interface StarRatingDisplayProps {
 
 interface StarRatingInputProps {
   mode: 'input';
-  /** Controlled value (1–5). */
-  value?: number;
-  /** Uncontrolled initial value (1–5). */
-  defaultValue?: number;
-  onChange?: (value: number) => void;
+  /** Controlled value (0–5). `0` renders as empty. */
+  value: number;
+  onChange: (value: number) => void;
   size?: StarRatingSize;
   className?: string;
   /** Form field name — the underlying native radios share this `name`. */
@@ -88,7 +86,6 @@ function StarRatingDisplay({ value, size = 'md', className, label }: StarRatingD
 
 function StarRatingInput({
   value,
-  defaultValue,
   onChange,
   size = 'lg',
   className,
@@ -96,16 +93,13 @@ function StarRatingInput({
   disabled,
   label = 'Select a rating',
 }: StarRatingInputProps) {
-  const [internal, setInternal] = React.useState<number>(defaultValue ?? value ?? 0);
   const [hovered, setHovered] = React.useState<number | null>(null);
 
-  const current = value ?? internal;
-  const active = hovered ?? current;
+  const active = hovered ?? value;
 
   function handleSelect(next: number) {
     if (disabled) return;
-    if (value === undefined) setInternal(next);
-    onChange?.(next);
+    onChange(next);
   }
 
   return (
@@ -120,7 +114,7 @@ function StarRatingInput({
       {STAR_INDICES.map((i) => {
         const v = i + 1;
         const filled = v <= active;
-        const checked = v === current;
+        const checked = v === value;
         return (
           <label
             key={v}

@@ -123,7 +123,7 @@ export function ReviewForm({ productId, className, onSuccess, onCancel }: Review
               <StarRating
                 mode="input"
                 name={field.name}
-                value={field.value || undefined}
+                value={field.value}
                 onChange={(next) => {
                   field.onChange(next);
                 }}
