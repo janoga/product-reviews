@@ -15,7 +15,7 @@ Product Reviews is a web-based product review system where users can browse a ca
 ### Installation & Development
 
 ```bash
-git clone <repo-url> product-reviews
+git clone git@github.com:janoga/product-reviews.git
 cd product-reviews
 
 cp .env.example .env.local
@@ -72,15 +72,15 @@ The same `.env.local` file is consumed by both the app and `docker-compose.yml`,
 ## 📁 Project Structure
 
 ```
-app/         Next.js routes (catalog, category, product detail)
-features/    Feature slices — products, reviews, categories
-  ├─ components/   UI components for the feature
-  ├─ actions.ts    Server Actions (mutations)
-  ├─ queries.ts    Server-side data fetching
-  └─ repository.ts Prisma data access
-lib/         Shared utilities, env parsing, storage, hooks
-prisma/      Schema, migrations, seed data
-components/  Shared shadcn/ui primitives
+app/                Next.js routes (catalog, category, product detail)
+features/           Feature slices — products, reviews, categories
+  ├─ components/    UI components for the feature
+  ├─ actions.ts     Server Actions (mutations)
+  ├─ queries.ts     Server-side data fetching
+  └─ repository.ts  Prisma data access
+lib/                Shared utilities, env parsing, storage, hooks
+prisma/             Schema, migrations, seed data
+components/         Shared shadcn/ui primitives
 ```
 
 ## 🧠 Design Decisions & Trade-offs
