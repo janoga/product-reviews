@@ -37,13 +37,23 @@ interface ProductCardProps {
   product: ProductCardData;
   variant?: ProductCardVariant;
   className?: string;
+  /**
+   * Mark the image as high-priority (eager, `fetchpriority=high`). Set for the
+   * first few cards above the fold to avoid LCP warnings.
+   */
+  priority?: boolean;
 }
 
 /**
  * Unified product card for both grid and list catalog layouts. A single
  * component with a `variant` prop keeps the two modes visually consistent.
  */
-export function ProductCard({ product, variant = 'grid', className }: ProductCardProps) {
+export function ProductCard({
+  product,
+  variant = 'grid',
+  className,
+  priority = false,
+}: ProductCardProps) {
   return (
     <Card
       className={cn(
@@ -60,7 +70,12 @@ export function ProductCard({ product, variant = 'grid', className }: ProductCar
           variant === 'grid' ? 'flex-col' : 'flex-row',
         )}
       >
-        <ProductImage imageUrl={product.imageUrl} name={product.name} variant={variant} />
+        <ProductImage
+          imageUrl={product.imageUrl}
+          name={product.name}
+          variant={variant}
+          priority={priority}
+        />
         <ProductBody product={product} variant={variant} />
       </Link>
     </Card>
@@ -71,10 +86,12 @@ function ProductImage({
   imageUrl,
   name,
   variant,
+  priority,
 }: {
   imageUrl: string | null;
   name: string;
   variant: ProductCardVariant;
+  priority: boolean;
 }) {
   const wrapperClasses = cn(
     'relative shrink-0 overflow-hidden bg-muted',
@@ -102,6 +119,7 @@ function ProductImage({
             ? '(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw'
             : '(min-width: 1024px) 20vw, (min-width: 640px) 25vw, 33vw'
         }
+        priority={priority}
         className="object-cover transition-transform duration-300 group-hover/product-card:scale-[1.02]"
       />
     </div>

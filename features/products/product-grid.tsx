@@ -91,9 +91,13 @@ export function ProductGrid({ initialPage, filters }: ProductGridProps) {
   return (
     <section aria-label="Products" className="flex flex-col gap-4">
       <ul className={containerClasses(variant)}>
-        {items.map((product) => (
+        {items.map((product, index) => (
           <li key={product.slug}>
-            <ProductCard product={product} variant={variant} />
+            <ProductCard
+              product={product}
+              variant={variant}
+              priority={index < (variant === 'grid' ? 4 : 2)}
+            />
           </li>
         ))}
       </ul>
