@@ -1,8 +1,15 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductCardSkeleton } from '@/features/products/product-card-skeleton';
+import { readViewCookie } from '@/features/products/view';
 
 /** Streamed while the catalog page's RSC data resolves. */
-export default function CatalogLoading() {
+export default async function CatalogLoading() {
+  const view = await readViewCookie();
+  const isList = view === 'list';
+  const listClasses = 'flex flex-col gap-3';
+  const gridClasses = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+  const skeletonCount = isList ? 5 : 8;
+
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 md:py-10" aria-busy>
       <div className="flex items-center justify-between gap-3">
@@ -18,10 +25,10 @@ export default function CatalogLoading() {
           ))}
         </div>
 
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
+        <ul className={isList ? listClasses : gridClasses}>
+          {Array.from({ length: skeletonCount }).map((_, index) => (
             <li key={index}>
-              <ProductCardSkeleton variant="grid" />
+              <ProductCardSkeleton variant={view} />
             </li>
           ))}
         </ul>

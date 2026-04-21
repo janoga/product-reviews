@@ -127,4 +127,12 @@
   html {
     @apply font-sans;
   }
+
+  /* Hide the browser-native clear affordance on search inputs so our custom
+     clear button is the single source of truth. */
+  input[type='search']::-webkit-search-cancel-button,
+  input[type='search']::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
