@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 
+import type { CreateReviewInput } from './schemas';
 import { REVIEWS_PAGE_SIZE } from './schemas';
 
 /** Single review as rendered in the detail page's list. */
@@ -53,4 +54,29 @@ export async function listReviewsPage(params: ListReviewsInput): Promise<Reviews
   const nextCursor = hasMore ? items[items.length - 1].id : null;
 
   return { items, nextCursor };
+}
+
+/**
+ * Inserts a review and returns it in the same shape `ReviewList` consumes, so
+ * callers can optimistically prepend the new row to the TanStack Query cache.
+ * Assumes the input has already been validated against `createReviewInputSchema`.
+ */
+export async function createReview(input: CreateReviewInput): Promise<ReviewListItem> {
+  return prisma.review.create({
+    data: {
+      productId: input.productId,
+      rating: input.rating,
+      title: input.title,
+      comment: input.comment,
+      authorName: input.authorName,
+    },
+    select: {
+      id: true,
+      rating: true,
+      title: true,
+      comment: true,
+      authorName: true,
+      createdAt: true,
+    },
+  });
 }

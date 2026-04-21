@@ -1,15 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PencilLine } from 'lucide-react';
 
 import { RatingDistribution } from '@/components/rating-distribution';
 import { RatingSummary } from '@/components/rating-summary';
+import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ProductDetail } from '@/features/products/product-detail';
 import { findProductDetail } from '@/features/products/repository';
 import { listReviewsPage } from '@/features/reviews/repository';
+import { ReviewComposer } from '@/features/reviews/review-composer';
 import { ReviewList } from '@/features/reviews/review-list';
+import { REVIEW_COMPOSER_ANCHOR } from '@/features/reviews/schemas';
 import { formatCount } from '@/lib/format';
 
 interface ProductDetailRouteProps {
@@ -85,30 +88,58 @@ export default async function ProductDetailRoute({ params }: ProductDetailRouteP
           ) : null}
         </h2>
 
-        {product.reviewCount > 0 ? (
-          <div className="grid gap-6 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-10">
-            <aside className="flex flex-col gap-4 self-start rounded-xl border p-5 md:sticky md:top-6">
-              <div className="flex flex-col gap-1">
-                <RatingSummary
-                  averageRating={product.averageRating}
-                  reviewCount={product.reviewCount}
-                  size="lg"
-                  showAverage
-                />
-                <p className="text-muted-foreground text-xs">
-                  Based on {formatCount(product.reviewCount)}{' '}
-                  {product.reviewCount === 1 ? 'review' : 'reviews'}
-                </p>
-              </div>
-              <RatingDistribution counts={product.ratingCounts} />
-            </aside>
+        <div className="grid gap-6 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-10">
+          <aside className="flex flex-col gap-5 self-start rounded-xl border p-5 md:sticky md:top-6">
+            {product.reviewCount > 0 ? (
+              <>
+                <div className="flex flex-col gap-1">
+                  <RatingSummary
+                    averageRating={product.averageRating}
+                    reviewCount={product.reviewCount}
+                    size="lg"
+                    showAverage
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    Based on {formatCount(product.reviewCount)}{' '}
+                    {product.reviewCount === 1 ? 'review' : 'reviews'}
+                  </p>
+                </div>
+                <RatingDistribution counts={product.ratingCounts} />
+                <Separator />
+              </>
+            ) : null}
+
+            <WriteReviewCta />
+          </aside>
+
+          <div className="flex flex-col gap-6">
+            <ReviewComposer productId={product.id} />
             <ReviewList productId={product.id} initialPage={initialReviews} />
           </div>
-        ) : (
-          <ReviewList productId={product.id} initialPage={initialReviews} />
-        )}
+        </div>
       </section>
     </article>
+  );
+}
+
+/**
+ * "Review this product" CTA matching the reference Amazon layout. It's a
+ * plain anchor to `#write-review` — the client-side `ReviewComposer` listens
+ * for the hashchange to expand and scroll the form into view.
+ */
+function WriteReviewCta() {
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="font-heading text-base font-semibold">Review this product</p>
+      <p className="text-muted-foreground text-sm">Share your thoughts with other customers.</p>
+      <a
+        href={`#${REVIEW_COMPOSER_ANCHOR}`}
+        className={`${buttonVariants({ variant: 'outline' })} mt-1 w-full`}
+      >
+        <PencilLine aria-hidden className="size-4" />
+        Write a customer review
+      </a>
+    </div>
   );
 }
 
