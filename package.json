@@ -10,6 +10,8 @@
     "format": "prettier --write .",
     "prepare": "husky",
     "postinstall": "dotenv -e .env.local -- prisma generate",
+    "docker:up": "docker compose --env-file .env.local up -d",
+    "docker:down": "docker compose --env-file .env.local down",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:seed": "dotenv -e .env.local -- tsx prisma/seed.ts",
     "db:studio": "dotenv -e .env.local -- prisma studio",
