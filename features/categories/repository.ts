@@ -12,23 +12,22 @@ export interface CategoryStats {
  * Powers the catalog sidebar and the "All products" aggregate.
  */
 export async function listCategoryStats(): Promise<CategoryStats> {
-  const [rows, totalProductCount] = await Promise.all([
-    prisma.category.findMany({
-      orderBy: { name: 'asc' },
-      select: {
-        slug: true,
-        name: true,
-        _count: { select: { products: true } },
-      },
-    }),
-    prisma.product.count(),
-  ]);
+  const rows = await prisma.category.findMany({
+    orderBy: { name: 'asc' },
+    select: {
+      slug: true,
+      name: true,
+      _count: { select: { products: true } },
+    },
+  });
 
   const categories: CategoryListItem[] = rows.map((row) => ({
     slug: row.slug,
     name: row.name,
     productCount: row._count.products,
   }));
+
+  const totalProductCount = categories.reduce((sum, category) => sum + category.productCount, 0);
 
   return { categories, totalProductCount };
 }
