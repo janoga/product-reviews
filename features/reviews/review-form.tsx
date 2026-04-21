@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -46,14 +45,14 @@ const DEFAULT_VALUES: ReviewFormValues = {
  * Review submission form for a product. Uses React Hook Form + Zod resolver
  * against the shared `createReviewInputSchema` so client and server enforce
  * identical rules. On success, the new review is optimistically prepended to
- * the reviews TanStack Query cache and `router.refresh()` re-renders the
- * server hero so the average rating, count, and distribution update live.
+ * the reviews TanStack Query cache and the server action's `revalidatePath`
+ * re-renders the server hero so the average rating, count, and distribution
+ * update live.
  *
  * The form is presentation-only — parents (e.g. `ReviewComposer`) own the
  * surrounding card chrome, heading, and open/close state.
  */
 export function ReviewForm({ productId, className, onSuccess, onCancel }: ReviewFormProps) {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const {
@@ -96,7 +95,6 @@ export function ReviewForm({ productId, className, onSuccess, onCancel }: Review
     reset(DEFAULT_VALUES);
     toast.success('Thanks for your review!');
 
-    router.refresh();
     onSuccess?.();
   });
 
@@ -247,9 +245,9 @@ function FormField({ label, htmlFor, required, error, errorId, hint, children }:
 
 /**
  * Prepends the new review to the first page of the cached infinite list so it
- * appears instantly without waiting for `router.refresh()` to complete. Cursor
- * stability is preserved because the next cursor (the oldest row in page 1)
- * doesn't change when we add a new newest row.
+ * appears instantly without waiting for the server action's revalidation to
+ * complete. Cursor stability is preserved because the next cursor (the oldest
+ * row in page 1) doesn't change when we add a new newest row.
  */
 function prependReviewToCache(
   queryClient: ReturnType<typeof useQueryClient>,
