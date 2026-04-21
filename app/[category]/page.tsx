@@ -3,13 +3,12 @@ import { notFound } from 'next/navigation';
 
 import { findCategoryBySlug } from '@/features/categories/repository';
 import { CatalogPage } from '@/features/products/catalog-page';
+import { asString, SLUG_PATTERN } from '@/lib/search-params';
 
 interface CategoryRouteProps {
   params: Promise<{ category: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
-
-const SLUG_PATTERN = /^[a-z0-9-]+$/;
 
 export async function generateMetadata({ params }: CategoryRouteProps): Promise<Metadata> {
   const { category } = await params;
@@ -48,9 +47,4 @@ export default async function CategoryRoute({ params, searchParams }: CategoryRo
       heading={found.name}
     />
   );
-}
-
-function asString(value: string | string[] | undefined): string | undefined {
-  if (Array.isArray(value)) return value[0];
-  return value;
 }

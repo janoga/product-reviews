@@ -14,12 +14,12 @@ import { ReviewComposer } from '@/features/reviews/review-composer';
 import { ReviewList } from '@/features/reviews/review-list';
 import { REVIEW_COMPOSER_ANCHOR } from '@/features/reviews/schemas';
 import { formatCount } from '@/lib/format';
+import { SLUG_PATTERN } from '@/lib/search-params';
 
 interface ProductDetailRouteProps {
   params: Promise<{ slug: string }>;
 }
 
-const SLUG_PATTERN = /^[a-z0-9-]+$/;
 const META_DESCRIPTION_MAX = 160;
 
 export async function generateMetadata({ params }: ProductDetailRouteProps): Promise<Metadata> {

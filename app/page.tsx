@@ -1,4 +1,5 @@
 import { CatalogPage } from '@/features/products/catalog-page';
+import { asString } from '@/lib/search-params';
 
 interface CatalogRouteProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -10,9 +11,4 @@ export default async function CatalogRoute({ searchParams }: CatalogRouteProps) 
   const q = asString(resolved.q)?.trim();
 
   return <CatalogPage q={q && q.length > 0 ? q : undefined} />;
-}
-
-function asString(value: string | string[] | undefined): string | undefined {
-  if (Array.isArray(value)) return value[0];
-  return value;
 }
