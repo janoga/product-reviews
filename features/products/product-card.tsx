@@ -27,6 +27,12 @@ export interface ProductCardData {
 
 export type ProductCardVariant = 'grid' | 'list';
 
+/** Shared image sizing so `ProductCardSkeleton` matches the real card exactly. */
+export const PRODUCT_CARD_IMAGE_CLASSES = {
+  grid: 'aspect-4/3 w-full',
+  list: 'aspect-square w-36 self-stretch sm:w-48 md:w-54',
+} as const;
+
 interface ProductCardProps {
   product: ProductCardData;
   variant?: ProductCardVariant;
@@ -72,7 +78,7 @@ function ProductImage({
 }) {
   const wrapperClasses = cn(
     'relative shrink-0 overflow-hidden bg-muted',
-    variant === 'grid' ? 'aspect-4/3 w-full' : 'aspect-square w-36 self-stretch sm:w-48 md:w-54',
+    PRODUCT_CARD_IMAGE_CLASSES[variant],
   );
 
   if (!imageUrl) {

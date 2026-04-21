@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
-import type { ProductCardVariant } from './product-card';
+import { PRODUCT_CARD_IMAGE_CLASSES, type ProductCardVariant } from './product-card';
 
 interface ProductCardSkeletonProps {
   variant?: ProductCardVariant;
@@ -17,14 +17,7 @@ export function ProductCardSkeleton({ variant = 'grid', className }: ProductCard
       className={cn(variant === 'list' && 'flex-row overflow-hidden md:gap-0', className)}
     >
       <div className={cn('flex min-w-0 flex-1', variant === 'grid' ? 'flex-col' : 'flex-row')}>
-        <Skeleton
-          className={cn(
-            'shrink-0 rounded-none',
-            variant === 'grid'
-              ? 'aspect-4/3 w-full'
-              : 'aspect-square w-28 self-stretch sm:w-36 md:w-44',
-          )}
-        />
+        <Skeleton className={cn('shrink-0 rounded-none', PRODUCT_CARD_IMAGE_CLASSES[variant])} />
         <div
           className={cn('flex min-w-0 flex-1 flex-col gap-2 p-4', variant === 'list' && 'gap-3')}
         >
